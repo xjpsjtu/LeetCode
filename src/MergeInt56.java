@@ -24,6 +24,7 @@ public class MergeInt56 {
 	}
 	public List<Interval> merge(List<Interval> intervals){
 		List<Interval> list = new ArrayList<Interval>();
+		if(intervals.size() == 0)return list;
 		Collections.sort(intervals, new IntervalComparable());
 		int start = intervals.get(0).start;
 		int end = intervals.get(0).end;
@@ -32,7 +33,7 @@ public class MergeInt56 {
 			int curstart = curI.start;
 			int curend = curI.end;
 			if(curstart <= end){
-				end = curstart;
+				end = Math.max(curend, end);
 			}else{
 				Interval interval = new Interval(start, end);
 				list.add(interval);
@@ -47,7 +48,23 @@ public class MergeInt56 {
 	
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
+		MergeInt56 m = new MergeInt56();
+		List<Interval> inlist = new ArrayList<Interval>();
+		inlist.add(new Interval(1,4));
+		inlist.add(new Interval(2,3));
+//		inlist.add(new Interval(8,10));
+//		inlist.add(new Interval(15,18));
+		Collections.sort(inlist, new IntervalComparable());
+		for(int i = 0; i < inlist.size(); i++){
+			Interval in = inlist.get(i);
+			System.out.println("[" + in.start + "," + in.end + "]");
+		}
+		System.out.println("------------------");
+		List<Interval> list = m.merge(inlist);
+		for(int i = 0; i < list.size(); i++){
+			Interval in = list.get(i);
+			System.out.println("[" + in.start + "," + in.end + "]");
+		}
 	}
 
 }
@@ -68,8 +85,9 @@ class IntervalComparable implements Comparator<Interval>{
 	@Override
 	public int compare(Interval arg0, Interval arg1) {
 		// TODO Auto-generated method stub
-		if(arg0.start <= arg1.start)return -1;
-		else return 1;
+		if(arg0.start < arg1.start)return -1;
+		if(arg0.start > arg1.start)return 1;
+		else return 0;
 	}
 	
 }
